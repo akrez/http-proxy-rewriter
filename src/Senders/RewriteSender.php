@@ -113,7 +113,7 @@ class RewriteSender extends Sender
                 $newSetCookie = (clone $targetSetCookie);
                 $newSetCookie->setName($newSetCookieName);
                 $newSetCookie->setValue(base64_encode(json_encode($targetSetCookie->toArray())));
-                $newSetCookie->setDomain($this->serverRequest->getUri()->getHost());
+                $newSetCookie->setDomain(parse_url($this->scriptUrl, PHP_URL_HOST));
                 $newSetCookie->setPath('/');
 
                 $response = $response->withAddedHeader('set-cookie', $newSetCookie->__toString());
