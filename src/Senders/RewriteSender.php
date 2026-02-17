@@ -46,7 +46,7 @@ class RewriteSender extends Sender
         try {
 
             if ($mainUrlString) {
-                $url = LeagueUri::fromBaseUri($urlString, $mainUrlString);
+                $url = LeagueUri::parse($urlString, $mainUrlString);
             } else {
                 $url = LeagueUri::new($urlString);
             }
