@@ -1,0 +1,38 @@
+{
+    "name": "akrez/http-proxy-rewriter",
+    "type": "library",
+    "description": "Akrez http proxy rewriter",
+    "version": "1",
+    "keywords": [
+        "akrez",
+        "proxy",
+        "http",
+        "rewriter"
+    ],
+    "require": {
+        "php": "^8.1",
+        "akrez/http-proxy": "*",
+        "akrez/http-runner": "*",
+        "league/uri": "*"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Akrez\\HttpProxyRewriter\\": "src/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.1"
+        },
+        "sort-packages": true
+    },
+    "authors": [
+        {
+            "name": "Akrez",
+            "email": "akrez.like@gmail.com"
+        }
+    ]
+}
