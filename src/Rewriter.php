@@ -19,6 +19,18 @@ abstract class Rewriter
         return $this->rewriteSender->encryptUrl($urlString, $mainUrlString);
     }
 
+    protected static function isContentTypes(array $contentTypes, ResponseInterface $response)
+    {
+        $responseContentTypes = (array) $response->getHeader('Content-Type');
+        foreach ($responseContentTypes as $responseContentType) {
+            if (static::startsWith($responseContentType, $contentTypes)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected static function isContentType(string $contentType, ResponseInterface $response)
     {
         $contentTypes = (array) $response->getHeader('Content-Type');
@@ -26,7 +38,7 @@ abstract class Rewriter
         return $contentType === trim(preg_replace('@;.*@', '', reset($contentTypes)));
     }
 
-    protected static function startsWith($haystack, $needles)
+    protected static function startsWith(string $haystack,array $needles)
     {
         foreach ((array) $needles as $needle) {
             if ($needle !== '' && stripos($haystack, $needle) === 0) {
