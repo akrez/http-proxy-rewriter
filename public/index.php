@@ -11,17 +11,15 @@ require_once '../vendor/autoload.php';
 function rewriter()
 {
     $serverRequest = ServerRequest::fromGlobals();
-
-    $sender = new RewriteSender;
-
     $serverParams = $serverRequest->getServerParams() + [
         'REQUEST_SCHEME' => null,
         'HTTP_HOST' => null,
         'SCRIPT_NAME' => null,
     ];
     $scriptUrl = $serverParams['REQUEST_SCHEME'].'://'.$serverParams['HTTP_HOST'].$serverParams['SCRIPT_NAME'];
-    $sender->setScriptUrl($scriptUrl);
 
+    $sender = new RewriteSender;
+    $sender->setScriptUrl($scriptUrl);
     $sender->setRewritersClassName([
         TextHtmlRewriter::class,
         TextCssRewriter::class,
