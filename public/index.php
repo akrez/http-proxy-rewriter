@@ -1,6 +1,9 @@
 <?php
 
 use Akrez\HttpProxy\Factories\InlineFactory;
+use Akrez\HttpProxyRewriter\Senders\DomainSender;
+use Akrez\HttpProxyRewriter\Factories\DomainFactory;
+use Akrez\HttpProxyRewriter\Rewriters\DomainRewriter;
 use Akrez\HttpProxyRewriter\Rewriters\TextCssRewriter;
 use Akrez\HttpProxyRewriter\Rewriters\TextHtmlRewriter;
 use Akrez\HttpProxyRewriter\Senders\RewriteSender;
@@ -28,4 +31,19 @@ function rewriter()
     return InlineFactory::emitSender($sender);
 }
 
-rewriter();
+function domain(string $proxyHost)
+{
+    $sender = new DomainSender;
+    $sender->setProxyHost($proxyHost);
+    $sender->setDomainersClassName([
+        DomainRewriter::class,
+    ]);
+
+    $serverRequest = ServerRequest::fromGlobals();
+    $factory = new DomainFactory($serverRequest);
+    $factory->setProxyHost($proxyHost);
+
+    return DomainFactory::emitSender($sender, $factory);
+}
+
+domain();
