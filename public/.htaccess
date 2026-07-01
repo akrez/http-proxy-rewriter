@@ -1,0 +1,6 @@
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82 .php .php8 .phtml
+</IfModule>
+
+RewriteEngine On
+RewriteRule ^ index.php [L]
