@@ -22,9 +22,11 @@ class DomainRewriter extends Domainer
 
     public function convert($content, $mainPageUrl)
     {
-        return preg_replace(
-            '~(:(?:(?:\\\\/\\\\/)|//))([^/\\\\\"\s]+)~',
-            '$1$2.' . $this->domainSender->getProxyHost(),
+        $proxyHost = $this->domainSender->getProxyHost();
+
+        return preg_replace_callback(
+            '~(\\\\/\\\\/|//)([A-Za-z0-9][A-Za-z0-9.-]*)~',
+            fn ($m) => $m[1] . $m[2] . '.' . $proxyHost,
             $content
         );
     }
