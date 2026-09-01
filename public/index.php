@@ -46,4 +46,4 @@ function domain(string $proxyHost)
     return DomainFactory::emitSender($sender, $factory);
 }
 
-domain();
+domain('akrezofski.ir');
