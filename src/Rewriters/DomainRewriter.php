@@ -24,9 +24,12 @@ class DomainRewriter extends Domainer
     {
         $proxyHost = $this->domainSender->getProxyHost();
 
+        $mapToHost = $this->domainSender->getMapToHost();
+        $hostToMap = array_flip($mapToHost);
+
         return preg_replace_callback(
             '~(\\\\/\\\\/|//)([A-Za-z0-9][A-Za-z0-9.-]*)~',
-            fn ($m) => $m[1] . $m[2] . '.' . $proxyHost,
+            fn ($m) => ($hostToMap[$m[1].$m[2]] ?? $m[1].$m[2]).'.'.$proxyHost,
             $content
         );
     }

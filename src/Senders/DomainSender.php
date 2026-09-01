@@ -17,6 +17,20 @@ class DomainSender extends Sender
 
     protected array $domainersClassName = [];
 
+    protected array $mapToHost = [];
+
+    public function setMapToHost(array $mapToHost)
+    {
+        $this->mapToHost = $mapToHost;
+
+        return $this;
+    }
+
+    public function getMapToHost(): array
+    {
+        return $this->mapToHost;
+    }
+
     public function setProxyHost(?string $proxyHost)
     {
         $this->proxyHost = $proxyHost;
@@ -39,12 +53,18 @@ class DomainSender extends Sender
     public function encryptUrl(string $urlString, ?string $mainUrlString = null)
     {
         try {
-            $url = $mainUrlString ? 
-                LeagueUri::parse($urlString, $mainUrlString) : 
+            $url = $mainUrlString ?
+                LeagueUri::parse($urlString, $mainUrlString) :
                 LeagueUri::new($urlString);
 
             $newUri = new Uri($url->toString());
-            $newUri = $newUri->withHost($newUri->getHost() . '.' . $this->proxyHost);
+
+            $mapToHost = $this->getMapToHost();
+            $hostToMap = array_flip($mapToHost);
+            $newHost = ($hostToMap[$newUri->getHost()] ?? $newUri->getHost());
+
+            $newUri = $newUri->withHost($newHost.'.'.$this->proxyHost);
+
             return $newUri->__toString();
 
         } catch (\Throwable $th) {
@@ -107,9 +127,11 @@ class DomainSender extends Sender
                 $response->getProtocolVersion(),
                 $response->getReasonPhrase()
             );
-            $response = $response
-                ->withoutHeader('Content-Length')
-                ->withHeader('Content-Length', $response->getBody()->getSize());
+            if ($response->hasHeader('Content-Length')) {
+                $response = $response
+                    ->withoutHeader('Content-Length')
+                    ->withHeader('Content-Length', $response->getBody()->getSize());
+            }
         }
 
         return $response;

@@ -10,6 +10,20 @@ class DomainFactory extends Factory
 {
     protected ?string $proxyHost;
 
+    protected array $mapToHost = [];
+
+    public function setMapToHost(array $mapToHost)
+    {
+        $this->mapToHost = $mapToHost;
+
+        return $this;
+    }
+
+    public function getMapToHost(): array
+    {
+        return $this->mapToHost;
+    }
+
     public function __construct(protected ServerRequestInterface $globalServerRequest) {}
 
     public function setProxyHost(?string $proxyHost)
@@ -30,6 +44,9 @@ class DomainFactory extends Factory
         $newHost = $this->removeSuffixDomain($uri->getHost());
         if (! $newHost) {
             return null;
+        }
+        if (array_key_exists($newHost, $this->mapToHost)) {
+            $newHost = $this->mapToHost[$newHost];
         }
         $uri = $uri->withHost($newHost);
 
